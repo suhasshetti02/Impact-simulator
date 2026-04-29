@@ -1,0 +1,48 @@
+# ── Python ───────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Environment / secrets
+.env
+*.env
+*.env.*
+!.env.example
+
+# ── Machine-learning artifacts ────────────────────────
+# Keep model files if you want to share them; remove the next
+# two lines if you DO want to commit the trained models.
+backend/data/models/*.joblib
+backend/data/models/*.pkl
+
+# ── Node / React ──────────────────────────────────────
+node_modules/
+frontend/build/
+frontend/.cache/
+
+# ── OS / editor ───────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+*.code-workspace
+
+# ── Logs ──────────────────────────────────────────────
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

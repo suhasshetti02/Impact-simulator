@@ -1,0 +1,95 @@
+/* Tailwind v3 directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* ─── Base overrides ─────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    background-color: #080c14;
+    color: #f0f4ff;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #080c14; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(108, 99, 255, 0.45);
+    border-radius: 3px;
+  }
+
+  /* Range input — cannot be styled with Tailwind utilities */
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.10);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+    width: 100%;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: linear-gradient(135deg, #6c63ff, #00d4ff);
+    border-radius: 50%;
+    border: 2px solid #080c14;
+    box-shadow: 0 0 8px rgba(108, 99, 255, 0.6);
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+  }
+}
+
+/* ─── Component utilities ────────────────────────────────────── */
+@layer components {
+  /* Glassmorphism card */
+  .glass {
+    @apply bg-white/[0.04] border border-white/[0.08] backdrop-blur-md;
+  }
+  .glass-hover {
+    @apply transition-all duration-300;
+  }
+  .glass-hover:hover {
+    @apply bg-white/[0.07];
+    box-shadow: 0 0 40px rgba(108, 99, 255, 0.25);
+    transform: translateY(-2px);
+  }
+}
+
+/* ─── Utilities ──────────────────────────────────────────────── */
+@layer utilities {
+  /* Gradient text */
+  .text-gradient {
+    background: linear-gradient(135deg, #6c63ff 0%, #00d4ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Glow shadows (Tailwind JIT can't compute arbitrary rgba) */
+  .shadow-violet {
+    box-shadow: 0 4px 18px rgba(108, 99, 255, 0.45);
+  }
+  .shadow-violet-lg {
+    box-shadow: 0 8px 28px rgba(108, 99, 255, 0.6);
+  }
+  .shadow-card {
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.40);
+  }
+}
