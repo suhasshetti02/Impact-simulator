@@ -24,8 +24,7 @@ env/
 # ── Machine-learning artifacts ────────────────────────
 # Keep model files if you want to share them; remove the next
 # two lines if you DO want to commit the trained models.
-backend/data/models/*.joblib
-backend/data/models/*.pkl
+
 
 # ── Node / React ──────────────────────────────────────
 node_modules/

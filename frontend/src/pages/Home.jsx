@@ -43,14 +43,7 @@ export default function Home() {
         <div className="pointer-events-none absolute -bottom-32 -right-48 w-[600px] h-[600px] rounded-full bg-cyan/15 blur-[120px]" aria-hidden="true" />
 
         {/* Badges */}
-        <div className="flex gap-3 mb-8 animate-fade-up">
-          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-violet/15 text-violet border border-violet/30">
-            🏛️ RVCE Bengaluru
-          </span>
-          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-emerald/12 text-emerald border border-emerald/25">
-            🌍 SDG 9
-          </span>
-        </div>
+        
 
         {/* Headline */}
         <h1
