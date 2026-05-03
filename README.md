@@ -1,8 +1,6 @@
 # 🚦 AI-Based Policy Impact Simulator
 
-### **SDG 9: Industry, Innovation, and Infrastructure**
-**RV College of Engineering, Bengaluru**  
-*Mentor: Dr. Vinay Hegde*
+
 
 ---
 
