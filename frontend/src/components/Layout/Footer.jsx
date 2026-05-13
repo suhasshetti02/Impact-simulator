@@ -11,11 +11,9 @@ export default function Footer() {
           <span className="text-xl">🌐</span>
           <span className="font-display font-bold text-sm text-gradient">PolicySim</span>
         </div>
-        <p className="text-xs text-white/35">
-          AI-Based Policy Impact Simulator · SDG 9 · RV College of Engineering, Bengaluru
-        </p>
+
         <p className="text-xs text-white/25">
-          Mentor: Dr. Vinay Hegde · Flask + React 19 + Tailwind CSS v4
+         Flask + React 19 + Tailwind CSS v4
         </p>
       </div>
     </footer>
