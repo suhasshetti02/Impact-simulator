@@ -1,0 +1,21 @@
+feature,mean_shap
+Travel Time Index,1.1926451921463013
+Traffic Volume,0.6876128315925598
+Weather_encoded,0.00392570486292243
+traffic_env_pressure,0.003162652486935258
+month,0.002012095646932721
+Road Capacity Utilization,0.0016416218131780624
+Area_encoded,0.001532081631012261
+Average Speed,0.0013825157657265663
+aqms_dist_km,0.001064568874426186
+day_of_week,0.0010603457922115922
+Incident Reports,0.0006307669100351632
+speed_env_interaction,0.0005497749662026763
+nqms_dist_km,0.00046443287283182144
+nqms_proximity_score,0.00022728370095137507
+congestion_geo_score,0.00019071232236456126
+Roadwork_encoded,2.5371662559336983e-05
+is_weekend,0.0
+aqms_proximity_score,0.0
+env_risk_score,0.0
+urban_density_index,0.0

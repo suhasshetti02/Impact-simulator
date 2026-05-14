@@ -22,10 +22,10 @@ const ProcessingOverlay = ({ active }) => (
           />
           <div className="space-y-3">
             {[
-              { icon: Database, text: "Ingesting baseline data..." },
-              { icon: Globe2, text: "Applying spatial redistribution..." },
-              { icon: Cpu, text: "Running Random Forest inference..." },
-              { icon: Sparkles, text: "Calculating explainability insights..." }
+              { icon: Database, text: "Loading geospatial baseline..." },
+              { icon: Globe2,   text: "Resolving KML environmental zone..." },
+              { icon: Cpu,      text: "Running XGBoost inference..." },
+              { icon: Sparkles, text: "Computing AQI & noise impact..." }
             ].map((step, i) => (
               <motion.div 
                 key={i}

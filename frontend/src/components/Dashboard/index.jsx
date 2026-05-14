@@ -20,11 +20,11 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/traffic?limit=100')
+    fetch('http://localhost:5001/api/traffic?limit=100')
       .then(res => res.json())
       .then(data => {
-        if (!data.success || !data.data.length) return;
-        const arr = data.data;
+        const arr = data.records || data.data;
+        if (!arr || !arr.length) return;
         const avg = (key) => arr.reduce((sum, d) => sum + (d[key] || 0), 0) / arr.length;
         setMetrics({
           vol: avg('vehicle_count'),

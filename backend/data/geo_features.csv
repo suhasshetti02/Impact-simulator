@@ -1,0 +1,17 @@
+location,lat,lon,nearest_aqms_name,aqms_dist_km,aqms_proximity_score,aqms_density_3km,nearest_nqms_name,nqms_dist_km,nqms_proximity_score,nqms_density_3km,env_risk_score,urban_density_index
+Silk Board Junction,12.9167,77.6219,"Air Monitoring Station, Central Silk Board Junction, Bengaluru",0.0141,0.9972,1,"Noise Monitoring Station, NIMHANS, Bengaluru",3.944,0.559,0,0.8219,0.12
+Hebbal Flyover,13.045,77.5949,"Air Monitoring Station, Yeswanthpur Police Station, Bengaluru",4.965,0.5018,0,"Noise Monitoring Station, Yeswanthpur, Bengaluru",4.9633,0.5018,0,0.5018,0.0
+KR Puram Bridge,13.005,77.6945,"Air Monitoring Station, Graphite India Limitd, Mahadevapura, Bengaluru",3.225,0.6079,0,"Noise Monitoring Station, Domlur, Bengaluru",7.6508,0.3952,0,0.5228,0.0
+Electronic City Phase 1,12.842,77.676,"Air Monitoring Station, Central Silk Board Junction, Bengaluru",10.1599,0.3298,0,"Noise Monitoring Station, BTM, Bengaluru ",12.1947,0.2908,0,0.3142,0.0
+Marathahalli Bridge,12.9563,77.7007,"Air Monitoring Station, Graphite India Limitd, Mahadevapura, Bengaluru",2.7397,0.646,1,"Noise Monitoring Station, Domlur, Bengaluru",6.8222,0.4229,0,0.5568,0.12
+Whitefield Main Road,12.9698,77.75,"Air Monitoring Station, Graphite India Limitd, Mahadevapura, Bengaluru",4.5863,0.5216,0,"Noise Monitoring Station, Whitefield, Bengaluru",1.7459,0.7412,1,0.6094,0.08
+Koramangala 5th Block,12.9279,77.6271,"Air Monitoring Station, Central Silk Board Junction, Bengaluru",1.3609,0.7861,1,"Noise Monitoring Station, NIMHANS, Bengaluru",3.9054,0.5615,0,0.6963,0.12
+Indiranagar 100ft Road,12.9784,77.6408,"Air Monitoring Station, TERI Office, Domlur, Bengaluru",1.6727,0.7493,1,"Noise Monitoring Station, Domlur, Bengaluru",1.6808,0.7484,1,0.7489,0.2
+Indiranagar,12.9784,77.6408,"Air Monitoring Station, TERI Office, Domlur, Bengaluru",1.6727,0.7493,1,"Noise Monitoring Station, Domlur, Bengaluru",1.6808,0.7484,1,0.7489,0.2
+Whitefield,12.9698,77.75,"Air Monitoring Station, Graphite India Limitd, Mahadevapura, Bengaluru",4.5863,0.5216,0,"Noise Monitoring Station, Whitefield, Bengaluru",1.7459,0.7412,1,0.6094,0.08
+Koramangala,12.9279,77.6271,"Air Monitoring Station, Central Silk Board Junction, Bengaluru",1.3609,0.7861,1,"Noise Monitoring Station, NIMHANS, Bengaluru",3.9054,0.5615,0,0.6963,0.12
+Hebbal,13.045,77.5949,"Air Monitoring Station, Yeswanthpur Police Station, Bengaluru",4.965,0.5018,0,"Noise Monitoring Station, Yeswanthpur, Bengaluru",4.9633,0.5018,0,0.5018,0.0
+Marathahalli,12.9563,77.7007,"Air Monitoring Station, Graphite India Limitd, Mahadevapura, Bengaluru",2.7397,0.646,1,"Noise Monitoring Station, Domlur, Bengaluru",6.8222,0.4229,0,0.5568,0.12
+Electronic City,12.842,77.676,"Air Monitoring Station, Central Silk Board Junction, Bengaluru",10.1599,0.3298,0,"Noise Monitoring Station, BTM, Bengaluru ",12.1947,0.2908,0,0.3142,0.0
+MG Road,12.9756,77.6097,"Air Monitoring Station, DTDC House, Old Airport, Bengaluru",1.0065,0.8324,1,"Noise Monitoring Station, Parisara Bhavan, Bengaluru ",0.6679,0.8822,2,0.8523,0.28
+Yeshwanthpur,13.0257,77.5545,"Air Monitoring Station, Yeswanthpur Police Station, Bengaluru",0.9254,0.8438,1,"Noise Monitoring Station, Yeswanthpur, Bengaluru",0.9233,0.8441,1,0.8439,0.2

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document id="root_doc">
+<Schema name="ka_nois_quality_monitoring" id="ka_nois_quality_monitoring">
+	<SimpleField name="OBJECTID" type="int"></SimpleField>
+	<SimpleField name="KGISCode" type="string"></SimpleField>
+	<SimpleField name="DepartmentCode" type="string"></SimpleField>
+	<SimpleField name="KGISNQMSID" type="int"></SimpleField>
+	<SimpleField name="NQMSName" type="string"></SimpleField>
+	<SimpleField name="KGISVillageID" type="int"></SimpleField>
+	<SimpleField name="KGISWardID" type="string"></SimpleField>
+</Schema>
+<Folder><name>ka_nois_quality_monitoring</name>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#ka_nois_quality_monitoring">
+		<SimpleData name="OBJECTID">1</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000FEPCBUNOCRNQM0001</SimpleData>
+		<SimpleData name="DepartmentCode">1</SimpleData>
+		<SimpleData name="KGISNQMSID">1</SimpleData>
+		<SimpleData name="NQMSName">Noise Monitoring Station, NIMHANS, Bengaluru</SimpleData>
+		<SimpleData name="KGISVillageID">15680</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>77.5924438,12.9375277</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#ka_nois_quality_monitoring">
+		<SimpleData name="OBJECTID">2</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000FEPCBUNOCRNQM0002</SimpleData>
+		<SimpleData name="DepartmentCode">2</SimpleData>
+		<SimpleData name="KGISNQMSID">2</SimpleData>
+		<SimpleData name="NQMSName">Noise Monitoring Station, RVCE, Bengaluru</SimpleData>
+		<SimpleData name="KGISVillageID">15594</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>77.4997569,12.9232883</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#ka_nois_quality_monitoring">
+		<SimpleData name="OBJECTID">3</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000FEPCBUNOCRNQM0003</SimpleData>
+		<SimpleData name="DepartmentCode">3</SimpleData>
+		<SimpleData name="KGISNQMSID">3</SimpleData>
+		<SimpleData name="NQMSName">Noise Monitoring Station, Domlur, Bengaluru</SimpleData>
+		<SimpleData name="KGISVillageID">15093</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>77.6381784,12.9635014</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#ka_nois_quality_monitoring">
+		<SimpleData name="OBJECTID">4</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000FEPCBUNOCRNQM0004</SimpleData>
+		<SimpleData name="DepartmentCode">4</SimpleData>
+		<SimpleData name="KGISNQMSID">4</SimpleData>
+		<SimpleData name="NQMSName">Noise Monitoring Station, Whitefield, Bengaluru</SimpleData>
+		<SimpleData name="KGISVillageID">21423</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>77.7641799,12.977257</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#ka_nois_quality_monitoring">
+		<SimpleData name="OBJECTID">5</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000FEPCBUNOCRNQM0005</SimpleData>
+		<SimpleData name="DepartmentCode">5</SimpleData>
+		<SimpleData name="KGISNQMSID">5</SimpleData>
+		<SimpleData name="NQMSName">Noise Monitoring Station, Yeswanthpur, Bengaluru</SimpleData>
+		<SimpleData name="KGISVillageID">15480</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>77.558234,13.0182355</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#ka_nois_quality_monitoring">
+		<SimpleData name="OBJECTID">6</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000FEPCBUNOCRNQM0006</SimpleData>
+		<SimpleData name="DepartmentCode">6</SimpleData>
+		<SimpleData name="KGISNQMSID">6</SimpleData>
+		<SimpleData name="NQMSName">Noise Monitoring Station, BTM, Bengaluru </SimpleData>
+		<SimpleData name="KGISVillageID">15707</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>77.5864488,12.9083784</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#ka_nois_quality_monitoring">
+		<SimpleData name="OBJECTID">7</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000FEPCBUNOCRNQM0007</SimpleData>
+		<SimpleData name="DepartmentCode">7</SimpleData>
+		<SimpleData name="KGISNQMSID">7</SimpleData>
+		<SimpleData name="NQMSName">Noise Monitoring Station, Marathahalli, Bengaluru</SimpleData>
+		<SimpleData name="KGISVillageID">15711</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>77.5763304,12.9126842</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#ka_nois_quality_monitoring">
+		<SimpleData name="OBJECTID">8</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000FEPCBUNOCRNQM0008</SimpleData>
+		<SimpleData name="DepartmentCode">8</SimpleData>
+		<SimpleData name="KGISNQMSID">8</SimpleData>
+		<SimpleData name="NQMSName">Noise Monitoring Station, Nisarga Bhavana, Bengaluru</SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>77.5944122,12.9834631</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#ka_nois_quality_monitoring">
+		<SimpleData name="OBJECTID">9</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000FEPCBUNOCRNQM0009</SimpleData>
+		<SimpleData name="DepartmentCode">9</SimpleData>
+		<SimpleData name="KGISNQMSID">9</SimpleData>
+		<SimpleData name="NQMSName">Noise Monitoring Station, Parisara Bhavan, Bengaluru </SimpleData>
+		<SimpleData name="KGISVillageID">30092</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>77.6035361,12.9756348</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<ExtendedData><SchemaData schemaUrl="#ka_nois_quality_monitoring">
+		<SimpleData name="OBJECTID">10</SimpleData>
+		<SimpleData name="KGISCode">29572055428031620000FEPCBUNOCRNQM0010</SimpleData>
+		<SimpleData name="DepartmentCode">10</SimpleData>
+		<SimpleData name="KGISNQMSID">10</SimpleData>
+		<SimpleData name="NQMSName">Noise Monitoring Station, Peenya, Bengaluru </SimpleData>
+		<SimpleData name="KGISVillageID">15475</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>77.5032388,13.0180137</coordinates></Point>
+  </Placemark>
+</Folder>
+</Document></kml>

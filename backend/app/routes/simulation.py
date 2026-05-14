@@ -1,31 +1,26 @@
 """
-POST /api/simulate — Run a single policy simulation.
+POST /api/simulate — Run a single policy simulation (XGBoost + Environmental Engine).
 """
 from flask import Blueprint, request, jsonify
 import pandas as pd
 from datetime import datetime, timezone
 from app.simulation.scenario_engine import run_simulation
+from app.simulation.env_engine import compute_environmental_delta
 from app.utils.db import get_db
 from app.utils.baselines import build_ml_input_vector, get_location_baseline
 
 simulation_bp = Blueprint("simulation", __name__, url_prefix="/api")
 
 _POLICY_POLLUTION_SENSITIVITY = {
-    "tunnel":              0.75,   # significant underground diversion
+    "tunnel":              0.75,
     "flyover":             0.80,
     "road_widening":       0.85,
-    "signal_optimisation": 0.90,   # smoother flow = less idle emissions
-    "metro_extension":     0.60,   # modal shift = big pollution drop
+    "signal_optimisation": 0.90,
+    "metro_extension":     0.60,
 }
 
 
 def _compute_roi_score(deltas: dict, budget_crore: float) -> float:
-    """
-    Composite ROI score = weighted sum of % improvements / budget (per 100 Cr).
-
-    Higher = better impact per rupee.
-    Scores above 1.0 are considered good.
-    """
     tt_pct   = abs(deltas["travel_time_min"]["change_pct"])
     poll_pct = abs(deltas["pollution_index"]["change_pct"])
     spd_pct  = abs(deltas["avg_speed_kmh"]["change_pct"])
@@ -42,11 +37,6 @@ def _compute_roi_score(deltas: dict, budget_crore: float) -> float:
 
 
 def _sdg9_kpis(deltas: dict) -> dict:
-    """
-    Map simulation deltas to UN SDG 9 KPI targets.
-
-    Returns a dict of KPI name → { value, target, achieved }.
-    """
     tt_pct   = abs(deltas["travel_time_min"]["change_pct"])
     poll_pct = abs(deltas["pollution_index"]["change_pct"])
     cap_pct  = abs(deltas["road_capacity"]["change_pct"])
@@ -64,7 +54,7 @@ def _sdg9_kpis(deltas: dict) -> dict:
 def simulate():
     """Run a single policy simulation and return a full result payload."""
 
-    # ── 1. Parse and validate request body ────────────────────────────────────
+    # ── 1. Parse and validate request body ──────────────────────────────────
     data = request.get_json(silent=True)
     if not data:
         return jsonify({"error": "Request body must be valid JSON"}), 400
@@ -81,11 +71,11 @@ def simulate():
     cap_pct  = float(data.get("capacity_increase_pct", 30))
     div_pct  = float(data.get("diversion_pct", 40))
 
-    # ── 2. Build location-aware baseline ──────────────────────────────────────
+    # ── 2. Build location-aware baseline ────────────────────────────────────
     baseline = build_ml_input_vector(location)
     b_poll   = get_location_baseline(location).get("pollution_proxy", 170.0)
 
-    # ── 3. Run simulation ──────────────────────────────────────────────────────
+    # ── 3. Run simulation (XGBoost model via scenario_engine) ───────────────
     try:
         df  = pd.DataFrame([baseline])
         raw = run_simulation(df, policy, policy_params=data)
@@ -96,7 +86,7 @@ def simulate():
         traceback.print_exc()
         return jsonify({"error": "Simulation failed", "detail": str(exc)}), 500
 
-    # ── 4. Derive before/after metrics from model output ──────────────────────
+    # ── 4. Derive before/after traffic metrics ───────────────────────────────
     b_tti = raw["before"]
     a_tti = raw["after"]
 
@@ -109,7 +99,6 @@ def simulate():
     b_tt  = round(b_tti * 30, 1)
     a_tt  = round(a_tti * 30, 1)
 
-    # Pollution: scale by speed improvement, modulated by policy sensitivity
     poll_sensitivity = _POLICY_POLLUTION_SENSITIVITY.get(policy, 0.85)
     a_poll = round(b_poll * max(poll_sensitivity * (a_tti / b_tti), 0.3), 1) if b_tti > 0 else b_poll
 
@@ -117,9 +106,9 @@ def simulate():
     if policy in ("tunnel", "road_widening"):
         a_cap = round(b_cap * (1 + cap_pct / 100))
     elif policy == "flyover":
-        a_cap = round(b_cap * (1 + div_pct / 200))   # flyover adds partial capacity
+        a_cap = round(b_cap * (1 + div_pct / 200))
     else:
-        a_cap = b_cap  # signal / metro: same physical road
+        a_cap = b_cap
 
     def delta(bv, av):
         chg = round(av - bv, 2)
@@ -137,39 +126,37 @@ def simulate():
     roi_score = _compute_roi_score(deltas, budget)
     sdg_kpis  = _sdg9_kpis(deltas)
 
-    # ── 5. Advanced Sustainability & Economic Impact Calculus ──────────────────
-    # Derived directly from the physics deltas to remain highly explainable.
-    
-    # Total hours saved per day for all commuters
-    # (Difference in travel time minutes / 60) * Number of vehicles
+    # ── 5. Sustainability & Economic Impact ──────────────────────────────────
     time_saved_min_per_vehicle = max(b_tt - a_tt, 0)
-    time_saved_hours_per_day = (time_saved_min_per_vehicle / 60.0) * a_vol
-    
-    # Fuel savings per day (Liters)
-    # Average car burns ~0.5 liters per hour of idling/congestion.
-    fuel_saved_liters_per_day = time_saved_hours_per_day * 0.5
+    time_saved_hours_per_day   = (time_saved_min_per_vehicle / 60.0) * a_vol
+    fuel_saved_liters_per_day  = time_saved_hours_per_day * 0.5
     if policy == 'metro_extension':
-        # Metro extension physically removes cars, so fuel savings are massive.
         cars_removed = max(b_vol - a_vol, 0)
         fuel_saved_liters_per_day += (cars_removed * (b_tt / 60.0) * 0.5)
 
-    # Economic Impact (INR / day)
-    # Value of Time (VOT) in Bengaluru ~ ₹150 / hour
-    # Cost of fuel ~ ₹100 / liter
     val_time = time_saved_hours_per_day * 150.0
     val_fuel = fuel_saved_liters_per_day * 100.0
     economic_impact_inr_per_day = val_time + val_fuel
-    
-    # Sustainability Score (0-100)
-    # Composite of pollution reduction, fuel efficiency, and active vehicle reduction.
+
     poll_drop_pct = min(abs(deltas["pollution_index"]["change_pct"]), 100)
     vol_drop_pct  = min(abs(deltas["vehicle_count"]["change_pct"]), 100)
     sus_score = min(50 + (poll_drop_pct * 1.5) + (vol_drop_pct * 1.2), 99.9)
     if policy == "metro_extension":
-        sus_score = min(sus_score + 15, 99.9) # Bonus for public transit
+        sus_score = min(sus_score + 15, 99.9)
     elif policy in ["tunnel", "road_widening"]:
-        sus_score = max(sus_score - 10, 20.0) # Penalty for induced demand
+        sus_score = max(sus_score - 10, 20.0)
 
+    # ── 6. Environmental Intelligence Engine ─────────────────────────────────
+    try:
+        env_impact = compute_environmental_delta(
+            location     = location,
+            before_state = {"vehicle_count": b_vol, "avg_speed_kmh": b_spd, "road_capacity": b_cap},
+            after_state  = {"vehicle_count": a_vol, "avg_speed_kmh": a_spd, "road_capacity": a_cap},
+        )
+    except Exception:
+        env_impact = None  # Non-blocking: env engine failure must not crash the API
+
+    # ── 7. Assemble result payload ───────────────────────────────────────────
     result = {
         "policy_type":      policy,
         "location":         location,
@@ -193,20 +180,21 @@ def simulate():
         "roi_score":           roi_score,
         "sdg_kpis":            sdg_kpis,
         "impact": {
-            "time_saved_hours_day": round(time_saved_hours_per_day),
-            "fuel_saved_liters_day": round(fuel_saved_liters_per_day),
-            "economic_value_inr_day": round(economic_impact_inr_per_day),
-            "sustainability_score": round(sus_score, 1)
+            "time_saved_hours_day":      round(time_saved_hours_per_day),
+            "fuel_saved_liters_day":     round(fuel_saved_liters_per_day),
+            "economic_value_inr_day":    round(economic_impact_inr_per_day),
+            "sustainability_score":      round(sus_score, 1),
         },
+        "environmental":       env_impact,   # NEW: full env intelligence block
         "traffic_improvement": raw["traffic_improvement"],
         "simulated_at":        datetime.now(timezone.utc).isoformat(),
     }
 
-    # ── 6. Persist to MongoDB (best-effort, non-blocking) ─────────────────────
+    # ── 8. Persist to MongoDB (best-effort) ──────────────────────────────────
     try:
         db = get_db()
         db["simulation_history"].insert_one({**result, "_location_key": location})
     except Exception:
-        pass  # History save failure must never break the API response
+        pass
 
     return jsonify(result), 200
