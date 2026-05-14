@@ -28,7 +28,7 @@ function DeltaChip({ change, pct, good }) {
 export default function Comparison({ result }) {
   if (!result) {
     return (
-      <div className="glass rounded-2xl flex items-center justify-center min-h-44 text-sm text-white/35">
+      <div className="glass-panel border-t-2 border-t-emerald/50 rounded-2xl flex items-center justify-center min-h-44 text-sm text-white/35">
         Run a simulation to see the before / after comparison.
       </div>
     );
@@ -37,18 +37,20 @@ export default function Comparison({ result }) {
   const { before, after, deltas, policy_type, location, budget_crore, timeline_months } = result;
 
   return (
-    <section className="glass rounded-2xl p-6" aria-label="Before vs After Comparison">
+    <section className="glass-panel border-t-2 border-t-emerald/50 rounded-2xl p-6 relative group" aria-label="Before vs After Comparison">
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-emerald/5 blur-2xl pointer-events-none" />
+      
       {/* Meta badges */}
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex flex-wrap gap-2 mb-6 relative z-10">
         {[
-          { label: `📍 ${location}`,                        cls: 'bg-violet/15 text-violet border-violet/30' },
-          { label: `₹${budget_crore} Cr`,                  cls: 'bg-amber/15 text-amber border-amber/30' },
-          { label: `⏱ ${timeline_months} months`,          cls: 'bg-emerald/12 text-emerald border-emerald/25' },
-          { label: policy_type.replace(/_/g, ' '),         cls: 'bg-cyan/12 text-cyan border-cyan/25' },
+          { label: `📍 ${location}`,                        cls: 'bg-[#0a0a0a]/50 text-white/90 border-white/10' },
+          { label: `₹${budget_crore} Cr`,                  cls: 'bg-[#0a0a0a]/50 text-white/90 border-white/10' },
+          { label: `⏱ ${timeline_months} months`,          cls: 'bg-[#0a0a0a]/50 text-white/90 border-white/10' },
+          { label: policy_type.replace(/_/g, ' '),         cls: 'bg-emerald/10 text-emerald border-emerald/20 shadow-[0_0_10px_rgba(0,229,160,0.2)]' },
         ].map((b) => (
           <span
             key={b.label}
-            className={`px-3 py-1 rounded-full text-xs font-semibold border capitalize ${b.cls}`}
+            className={`px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-bold border ${b.cls}`}
           >
             {b.label}
           </span>
