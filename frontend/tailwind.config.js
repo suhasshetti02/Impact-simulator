@@ -1,3 +1,5 @@
+const colors = require('tailwindcss/colors');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
@@ -14,11 +16,11 @@ module.exports = {
           700: "#111f38",
           600: "#1a2d4f",
         },
-        violet:  "#6c63ff",
-        cyan:    "#00d4ff",
-        emerald: "#00e5a0",
-        amber:   "#ffb547",
-        rose:    "#ff5c7f",
+        violet:  { ...colors.violet,  DEFAULT: "#6c63ff" },
+        cyan:    { ...colors.cyan,    DEFAULT: "#00d4ff" },
+        emerald: { ...colors.emerald, DEFAULT: "#00e5a0" },
+        amber:   { ...colors.amber,   DEFAULT: "#ffb547" },
+        rose:    { ...colors.rose,    DEFAULT: "#ff5c7f" },
       },
       borderRadius: {
         "2xl": "16px",

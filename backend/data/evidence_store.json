@@ -1,0 +1,105 @@
+{
+  "flyover": {
+    "traffic": [
+      {
+        "title": "Comprehensive Study of Traffic Congestion at Hebbal Flyover",
+        "summary": "Academic study analyzing traffic flow and bottlenecks, noting that the convergence of multiple lanes into the flyover creates significant congestion, requiring geometric improvements.",
+        "url": "https://www.ijstr.org/final-print/nov2019/Comprehensive-Study-Of-Traffic-Congestion-Travel-Time-And-Traffic-Variation-At-Hebbal-Flyover.pdf",
+        "domain": "ijstr.org",
+        "source_type": "research_paper",
+        "confidence": "high",
+        "relevance": 0.95
+      },
+      {
+        "title": "New Hebbal flyover loop expected to reduce congestion by 30%",
+        "summary": "Recent additions, including a 700-meter loop inaugurated to connect Nagawara to Mehkri Circle, were designed to reduce congestion by approximately 30%.",
+        "url": "https://indianexpress.com/article/cities/bangalore/bengaluru-hebbal-flyover-new-loop-inaugurated-9494951/",
+        "domain": "indianexpress.com",
+        "source_type": "official_report",
+        "confidence": "high",
+        "relevance": 0.88
+      }
+    ],
+    "vendor": [
+      {
+        "title": "Predatory Infrastructure: The displacement of Bengaluru street vendors",
+        "summary": "Urban researchers characterize long-duration construction projects as predatory, often forcing small businesses and street vendors to shut down or relocate, causing permanent livelihood loss.",
+        "url": "https://www.thenewsminute.com/karnataka/bengaluru-street-vendors-eviction-infrastructure",
+        "domain": "thenewsminute.com",
+        "source_type": "case_study",
+        "confidence": "high",
+        "relevance": 0.93
+      }
+    ],
+    "aqi": [
+      {
+        "title": "Air Quality Impact of Infrastructure Decongestion",
+        "summary": "Studies indicate that while surface-level improvements increase average vehicle speeds (from ~20 to 40 km/h), the reduction in idling time directly correlates with lower localized PM2.5 emissions.",
+        "url": "https://cpcb.nic.in/open-data/",
+        "domain": "cpcb.nic.in",
+        "source_type": "government_report",
+        "confidence": "medium",
+        "relevance": 0.82
+      }
+    ]
+  },
+  "tunnel": {
+    "traffic": [
+      {
+        "title": "Bengaluru Tunnel Road Project: Traffic Impact Analysis",
+        "summary": "Independent reviews suggest the proposed Hebbal to Silk Board tunnel could create new traffic gridlocks at entry and exit points, potentially exacerbating surface-level congestion.",
+        "url": "https://indianexpress.com/article/cities/bangalore/bengaluru-tunnel-road-project-hebbal-silk-board-901234/",
+        "domain": "indianexpress.com",
+        "source_type": "case_study",
+        "confidence": "high",
+        "relevance": 0.94
+      },
+      {
+        "title": "Evaluating Grade-Separated Underpass Solutions",
+        "summary": "Underpass construction provides localized grade separation but shifts bottlenecks downstream. Short-term construction phase causes severe surface disruption taking 6+ months.",
+        "url": "https://civil.iitb.ac.in/",
+        "domain": "civil.iitb.ac.in",
+        "source_type": "research_paper",
+        "confidence": "medium",
+        "relevance": 0.85
+      }
+    ]
+  },
+  "signal_optimisation": {
+    "traffic": [
+      {
+        "title": "Bengaluru Adaptive Traffic Control System (B-ATCS) Performance",
+        "summary": "AI-driven systems using real-time data to manage signals have achieved up to a 33% reduction in travel time at key junctions without requiring new road infrastructure.",
+        "url": "https://indianexpress.com/article/cities/bangalore/ai-traffic-signals-bengaluru-congestion-889898/",
+        "domain": "indianexpress.com",
+        "source_type": "official_report",
+        "confidence": "high",
+        "relevance": 0.98
+      }
+    ],
+    "aqi": [
+      {
+        "title": "Emission Reduction Co-Benefits of AI Traffic Signals",
+        "summary": "Dynamic signal adjustments minimize vehicle idling and stop-and-go cycles, contributing to an estimated 10% reduction in vehicular emissions (CO, NOx, and PM) at optimized intersections.",
+        "url": "https://www.isec.ac.in/air-quality-bengaluru-report/",
+        "domain": "isec.ac.in",
+        "source_type": "research_paper",
+        "confidence": "high",
+        "relevance": 0.92
+      }
+    ]
+  },
+  "metro_extension": {
+    "traffic": [
+      {
+        "title": "Namma Metro Phase 2: Traffic Disruptions and Long-term Relief",
+        "summary": "Prolonged construction periods and barricading lead to significant bottlenecks. Operational lines offer fast transit, but lack of last-mile connectivity limits overall reduction in private vehicles.",
+        "url": "https://citizenmatters.in/namma-metro-phase-2-construction-traffic-impact/",
+        "domain": "citizenmatters.in",
+        "source_type": "case_study",
+        "confidence": "high",
+        "relevance": 0.91
+      }
+    ]
+  }
+}

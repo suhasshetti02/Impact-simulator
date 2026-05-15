@@ -109,3 +109,47 @@
     box-shadow: 0 0 40px -10px rgba(244, 63, 94, 0.3);
   }
 }
+
+/* ─── Print Styles ───────────────────────────────────────────── */
+@media print {
+  body {
+    background-color: white !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Force all text to black for crisp printing */
+  * {
+    color: black !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Keep borders visible but subtle */
+  .border, [class*="border-"] {
+    border-color: #d1d5db !important;
+  }
+
+  /* Hide navigation, buttons, and decorative elements */
+  aside, nav, button, .bg-noise {
+    display: none !important;
+  }
+
+  /* Ensure containers expand properly for page width */
+  main, .flex-1, .h-\[calc\(100vh-4rem\)\] {
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Prevent page breaks inside critical components */
+  .rounded-xl, .rounded-2xl {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    border: 1px solid #e5e7eb !important;
+  }
+}

@@ -1,61 +1,127 @@
-import React, { useState } from 'react';
-import { useLocation, Link } from 'react-router-dom';
-import Comparison        from '../components/Comparison';
-import Visualization     from '../components/Visualization';
-import SdgKpiPanel       from '../components/SdgKpiPanel';
-import FeatureImportance from '../components/Explainability/FeatureImportance';
-import ScenarioExplanation from '../components/Explainability/ScenarioExplanation';
-import SustainabilityImpact from '../components/Explainability/SustainabilityImpact';
-import EnvironmentalPanel from '../components/Visualization/EnvironmentalPanel';
-import { runSimulation } from '../services/simulationService';
+/**
+ * ResultsPage — Urban Intelligence Decision Platform
+ *
+ * Architecture:
+ *   SimulationStatusBar (sticky context strip)
+ *   WorkspaceShell      (tab nav + AnimatePresence transitions + ContextDrawer)
+ *     ↳ OverviewWorkspace     — executive summary
+ *     ↳ TrafficWorkspace      — ML analysis
+ *     ↳ EnvironmentalWorkspace— geo-environment
+ *     ↳ CommunityWorkspace    — socio-economic
+ *     ↳ ResearchWorkspace     — evidence terminal
+ *     ↳ PlannerWorkspace      — decision support
+ *
+ * Key design decisions:
+ * - NO long scrolling. Each workspace manages its own layout.
+ * - Progressive disclosure: most important info is always visible.
+ * - Single API call — the full enriched payload is passed down via props.
+ * - All new components are null-safe — any missing data shows a graceful placeholder.
+ */
 
+import React, { useState } from 'react';
+import { createPortal }     from 'react-dom';
+import { useLocation }      from 'react-router-dom';
+import { runSimulation }    from '../services/simulationService';
+
+// Layout
+import SimulationStatusBar  from '../components/Results/SimulationStatusBar';
+import WorkspaceShell       from '../components/Results/WorkspaceShell';
+import PrintableReport      from '../components/Report/PrintableReport';
+
+// Workspace panels
+import OverviewWorkspace     from '../components/Results/workspaces/OverviewWorkspace';
+import TrafficWorkspace      from '../components/Results/workspaces/TrafficWorkspace';
+import EnvironmentalWorkspace from '../components/Results/workspaces/EnvironmentalWorkspace';
+import CommunityWorkspace    from '../components/Results/workspaces/CommunityWorkspace';
+import PlannerWorkspace      from '../components/Results/workspaces/PlannerWorkspace';
+
+// ── Demo fallback ─────────────────────────────────────────────────────────────
+// Shown when the user navigates to /results directly without running a simulation.
+// Includes all new keys so the full platform UI is always demonstrable.
 const DEMO_RESULT = {
-  policy_type: 'tunnel',
-  location: 'Silk Board Junction',
-  budget_crore: 250,
-  timeline_months: 24,
-  before: {
-    vehicle_count: 40832, avg_speed_kmh: 18,
-    travel_time_min: 44, pollution_index: 210, road_capacity: 42100,
-  },
-  after: {
-    vehicle_count: 24500, avg_speed_kmh: 34,
-    travel_time_min: 28, pollution_index: 158, road_capacity: 54730,
-  },
+  policy_type: 'flyover', location: 'Hebbal Flyover',
+  budget_crore: 450, timeline_months: 36,
+  before: { vehicle_count: 26533, avg_speed_kmh: 40, travel_time_min: 41, pollution_index: 175, road_capacity: 28530 },
+  after:  { vehicle_count: 16200, avg_speed_kmh: 58, travel_time_min: 26, pollution_index: 132, road_capacity: 37000 },
   deltas: {
-    vehicle_count:   { before: 40832, after: 24500, change: -16332, change_pct: -40.0 },
-    avg_speed_kmh:   { before: 18,    after: 34,    change: 16,     change_pct:  88.9 },
-    travel_time_min: { before: 44,    after: 28,    change: -16,    change_pct: -36.4 },
-    pollution_index: { before: 210,   after: 158,   change: -52,    change_pct: -24.8 },
-    road_capacity:   { before: 42100, after: 54730, change: 12630,  change_pct:  30.0 },
+    vehicle_count:   { before: 26533, after: 16200, change: -10333, change_pct: -38.9 },
+    avg_speed_kmh:   { before: 40,    after: 58,    change: 18,     change_pct:  45.0 },
+    travel_time_min: { before: 41,    after: 26,    change: -15,    change_pct: -36.6 },
+    pollution_index: { before: 175,   after: 132,   change: -43,    change_pct: -24.6 },
+    road_capacity:   { before: 28530, after: 37000, change: 8470,   change_pct:  29.7 },
   },
-  roi_score: 4.39,
+  roi_score: 3.21, traffic_improvement: 28.4,
   sdg_kpis: {
-    congestion_reduction: { value: 36.4, target: 30, unit: '%', label: 'Urban Congestion Reduction' },
-    pollution_reduction:  { value: 24.8, target: 20, unit: '%', label: 'Pollution Index Reduction' },
-    capacity_improvement: { value: 30.0, target: 25, unit: '%', label: 'Road Capacity Increase' },
-    speed_improvement:    { value: 88.9, target: 20, unit: '%', label: 'Average Speed Improvement' },
+    congestion_reduction: { value: 36.6, target: 30, unit: '%', label: 'Urban Congestion Reduction' },
+    pollution_reduction:  { value: 24.6, target: 20, unit: '%', label: 'Pollution Index Reduction' },
+    capacity_improvement: { value: 29.7, target: 25, unit: '%', label: 'Road Capacity Increase' },
+    speed_improvement:    { value: 45.0, target: 20, unit: '%', label: 'Average Speed Improvement' },
   },
-  impact: {
-    time_saved_hours_day: 3264,
-    fuel_saved_liters_day: 1632,
-    economic_value_inr_day: 652800,
-    sustainability_score: 62.4,
-  },
+  impact: { time_saved_hours_day: 2580, fuel_saved_liters_day: 1290, economic_value_inr_day: 516000, sustainability_score: 64.2 },
   environmental: {
-    before: { pm25_ugm3: 149.0, aqi: 323.1, noise_db: 57.2, noise_category: 'noisy' },
-    after:  { pm25_ugm3: 43.0,  aqi: 72.2,  noise_db: 52.8, noise_category: 'moderate' },
-    deltas: { pm25_delta: -106.0, pm25_pct: -71.1, aqi_delta: -250.9, aqi_pct: -77.7, noise_delta: -4.4, noise_pct: -7.7 },
-    geo_context: { location: 'Silk Board Junction', env_risk_score: 0.822, aqms_dist_km: 0.014, nqms_dist_km: 3.944 },
-    impact: { co2_saved_kg_day: 34018, environmental_score: 53.1 },
+    before: { pm25_ugm3: 124.0, aqi: 278.0, noise_db: 62.1, noise_category: 'noisy' },
+    after:  { pm25_ugm3:  42.0, aqi:  82.0, noise_db: 57.4, noise_category: 'moderate' },
+    deltas: { pm25_delta: -82, pm25_pct: -66.1, aqi_delta: -196, aqi_pct: -70.5, noise_delta: -4.7, noise_pct: -7.6 },
+    geo_context: { location: 'Hebbal Flyover', env_risk_score: 0.741, aqms_dist_km: 0.43, nqms_dist_km: 2.1 },
+    impact: { co2_saved_kg_day: 21440, environmental_score: 58.6 },
   },
+  socio_economic: {
+    vendor_impact:     { score: 52, level: 'moderate', description: 'Street vendors within the ~500m flyover construction corridor face an estimated 36-month disruption period. Approximately 254 vendors are estimated to be directly affected, with post-construction livelihood recovery expected within 6 months.', affected_vendors_est: 254, recovery_months: 6 },
+    pedestrian_impact: { score: 50, level: 'moderate', description: 'Pedestrian routes near the flyover site require detours of approximately 350m during construction. Long-term walkability and accessibility are expected to improve post-completion.', accessibility_change: 'improved_post_construction', detour_distance_m: 350 },
+    business_impact:   { score: 48, level: 'moderate', description: 'Local businesses along the corridor are estimated to face a 17% reduction in footfall during the 36-month construction phase. Recovery is expected within 8 months post-completion.', revenue_impact_pct: -16.8, recovery_timeline: '8 months post-completion' },
+    construction_disturbance: { duration_months: 36, noise_increase_db: 12, dust_level: 'high', work_hours: '06:00–22:00' },
+    long_term_benefits: { footfall_increase_pct: 38, accessibility_score: 82.8, description: 'Post-construction, improved traffic flow and connectivity are projected to increase commercial activity by 38% over 2–3 years, driven by improved pedestrian and transit access.' },
+    community_impact_score: 66,
+  },
+  evidence: {
+    query_key: 'flyover_traffic_vendor_aqi',
+    cached: true,
+    total_sources: 5,
+    sources: [
+      { title: 'Comprehensive Study of Traffic Congestion at Hebbal Flyover', summary: 'Academic study analyzing traffic flow and bottlenecks, noting that the convergence of multiple lanes into the flyover creates significant congestion.', url: 'https://www.ijstr.org/final-print/nov2019/Comprehensive-Study-Of-Traffic-Congestion-Travel-Time-And-Traffic-Variation-At-Hebbal-Flyover.pdf', domain: 'ijstr.org', source_type: 'research_paper', confidence: 'high', relevance: 0.95, cached: true, concern: 'traffic' },
+      { title: 'Predatory Infrastructure: The displacement of Bengaluru street vendors', summary: 'Urban researchers characterize long-duration construction projects as predatory, forcing small businesses and street vendors to relocate and causing livelihood loss.', url: 'https://www.thenewsminute.com/karnataka/bengaluru-street-vendors-eviction-infrastructure', domain: 'thenewsminute.com', source_type: 'case_study', confidence: 'high', relevance: 0.93, cached: true, concern: 'vendor' },
+      { title: 'New Hebbal flyover loop expected to reduce congestion by 30%', summary: 'Recent additions, including a 700-meter loop inaugurated to connect Nagawara to Mehkri Circle, were designed to reduce congestion by approximately 30%.', url: 'https://indianexpress.com/article/cities/bangalore/bengaluru-hebbal-flyover-new-loop-inaugurated-9494951/', domain: 'indianexpress.com', source_type: 'official_report', confidence: 'high', relevance: 0.91, cached: true, concern: 'traffic' },
+    ],
+  },
+  planner_summary: {
+    recommendation: 'proceed_with_conditions',
+    headline: 'Flyover at Hebbal offers strong traffic relief but requires a phased vendor rehabilitation plan.',
+    narrative: 'Based on XGBoost simulation results, environmental engine analysis, and cached urban planning evidence:\n\nTravel time is projected to decrease by 36.6%, significantly improving peak-hour throughput at Hebbal Flyover.\n\nThe Environmental Intelligence Engine estimates AQI improvement of 70.5% post-construction, based on CPCB PM2.5 breakpoints and CALINE4-adapted dispersion modelling.\n\nThe 36-month construction timeline introduces moderate disruption to an estimated 254 street vendors and local businesses. This assessment is supported by 3 curated reference sources from institutions including BBMP, NIUA, and IISc. Post-construction vendor and business recovery is projected within 6 months, based on comparable Bengaluru project data.\n\nLong-term commercial footfall is projected to increase by 38% within 2–3 years of completion.\n\nAn ROI score of 3.21 exceeds the break-even threshold of 1.0, indicating a positive return.',
+    key_risks: ['Construction-phase vendor displacement (~254 estimated)', '36-month construction timeline increases community exposure to noise and dust', 'Environmental score of 58.6 indicates partial, not full, AQI recovery'],
+    key_benefits: ['36.6% travel time reduction at peak hours', '70.5% AQI improvement post-construction', 'ROI score 3.21 exceeds break-even threshold of 1.0', '38% projected long-term footfall increase', 'Sustainability score 64.2/100'],
+    evidence_support_level: 'strong',
+    simulation_confidence: 'high',
+    generated_from: { travel_time_pct: 36.6, speed_pct: 45.0, aqi_pct: 70.5, roi: 3.21, sustainability_score: 64.2, community_score: 66, vendor_est: 254, recovery_months: 6, footfall_pct: 38, sources_count: 3, policy_type: 'flyover', location: 'Hebbal Flyover', budget_crore: 450, timeline: 36 },
+  },
+  simulated_at: new Date().toISOString(),
 };
 
+// ── Workspace router ──────────────────────────────────────────────────────────
+function resolveWorkspace(tab, result) {
+  switch (tab) {
+    case 'overview':     return <OverviewWorkspace      result={result} />;
+    case 'traffic':      return <TrafficWorkspace       result={result} />;
+    case 'environment':  return <EnvironmentalWorkspace result={result} />;
+    case 'community':    return <CommunityWorkspace     result={result} />;
+    case 'planner':      return <PlannerWorkspace       result={result} />;
+    default:             return <OverviewWorkspace      result={result} />;
+  }
+}
+
+// ── Page ──────────────────────────────────────────────────────────────────────
 export default function ResultsPage() {
-  const { state }                 = useLocation();
-  const [result, setResult]       = useState(state?.result || DEMO_RESULT);
-  const [loading, setLoading]     = useState(false);
+  const { state }           = useLocation();
+  const [result, setResult] = useState(state?.result ?? DEMO_RESULT);
+  const [loading, setLoading] = useState(false);
   const isDemo = !state?.result;
+  
+  const handlePrint = () => {
+    // Before printing, ensure the title is updated if needed
+    const oldTitle = document.title;
+    document.title = `Intelligence_Report_${result.location?.replace(/\s+/g, '_')}`;
+    window.print();
+    document.title = oldTitle;
+  };
 
   const rerun = async () => {
     setLoading(true);
@@ -71,151 +137,28 @@ export default function ResultsPage() {
     finally { setLoading(false); }
   };
 
-  const env = result?.environmental;
-
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10">
+    // Full-height container — NO page scroll. Workspaces scroll internally if needed.
+    <div className="flex flex-col h-[calc(100vh-4rem)] -mt-8 -mx-8 animate-fade-in">
 
-      {/* Header */}
-      <header className="flex flex-wrap items-start justify-between gap-4 mb-10">
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <h1 className="font-display text-2xl md:text-3xl font-bold text-white">
-              Simulation Telemetry
-            </h1>
-            {/* Model badge */}
-            <span className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-widest bg-cyan-400/10 border border-cyan-400/25 text-cyan-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-              XGBoost · KML Geo
-            </span>
-          </div>
-          {isDemo && (
-            <p className="mt-1 text-xs text-white/35">
-              Showing sample data.{' '}
-              <Link to="/simulator" className="text-emerald hover:underline transition-colors">
-                Run your own →
-              </Link>
-            </p>
-          )}
-          {!isDemo && result.roi_score && (
-            <div className="mt-2 inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald/10 border border-emerald/20 shadow-[0_0_15px_rgba(0,229,160,0.1)]">
-              <span className="text-[11px] font-semibold text-emerald uppercase tracking-wider">ROI Score</span>
-              <span className={`text-sm font-bold ${result.roi_score >= 1.0 ? 'text-emerald' : 'text-amber-400'}`}>
-                {result.roi_score.toFixed(2)}
-              </span>
-            </div>
-          )}
-        </div>
+      {/* Sticky command bar */}
+      <SimulationStatusBar
+        result={result}
+        isDemo={isDemo}
+        onRerun={rerun}
+        loading={loading}
+        onPrint={handlePrint}
+      />
 
-        <div className="flex gap-3 flex-wrap">
-          <button
-            id="rerun-btn"
-            onClick={rerun}
-            disabled={loading}
-            aria-busy={loading}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white/60 border border-white/10 hover:border-emerald/50 hover:text-white hover:bg-emerald/10 disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
-          >
-            {loading
-              ? <><span className="w-3.5 h-3.5 border-2 border-emerald/20 border-t-emerald rounded-full animate-spin" /> Refreshing…</>
-              : '↻ Re-run Model'}
-          </button>
-          <Link
-            to="/simulator"
-            id="new-simulation-btn"
-            className="px-5 py-2.5 rounded-xl text-sm font-semibold text-brand-900 bg-emerald hover:bg-emerald/90 shadow-[0_0_15px_rgba(0,229,160,0.3)] hover:shadow-[0_0_25px_rgba(0,229,160,0.5)] hover:-translate-y-0.5 transition-all duration-200"
-          >
-            + New Simulation
-          </Link>
-        </div>
-      </header>
-
-      {/* Summary stat strip — now includes AQI */}
-      {result && (
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-          {[
-            {
-              label: 'Travel Time Reduction',
-              value: `${Math.abs(result.deltas?.travel_time_min?.change_pct ?? 0).toFixed(1)}%`,
-              color: 'text-emerald', border: 'border-t-emerald/50',
-            },
-            {
-              label: 'Speed Improvement',
-              value: `+${(result.deltas?.avg_speed_kmh?.change_pct ?? 0).toFixed(1)}%`,
-              color: 'text-white/90', border: 'border-t-white/10',
-            },
-            {
-              label: 'Pollution Reduction',
-              value: `${Math.abs(result.deltas?.pollution_index?.change_pct ?? 0).toFixed(1)}%`,
-              color: 'text-white/90', border: 'border-t-white/10',
-            },
-            {
-              label: 'Capacity Gain',
-              value: `+${(result.deltas?.road_capacity?.change_pct ?? 0).toFixed(1)}%`,
-              color: 'text-white/90', border: 'border-t-white/10',
-            },
-            // NEW: AQI improvement from Environmental Engine
-            {
-              label: 'AQI Improvement',
-              value: env?.deltas?.aqi_pct != null
-                ? `${Math.abs(env.deltas.aqi_pct).toFixed(1)}%`
-                : 'N/A',
-              color: 'text-cyan-400', border: 'border-t-cyan-500/40',
-            },
-          ].map(s => (
-            <div key={s.label} className={`glass-panel rounded-2xl p-5 flex flex-col gap-1 border-t-2 ${s.border}`}>
-              <span className={`font-display text-2xl font-bold ${s.color}`}>{s.value}</span>
-              <span className="text-[10px] text-white/40 uppercase tracking-widest">{s.label}</span>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Comparison and SDG */}
-      <div className="flex flex-col lg:flex-row gap-6 mb-8">
-        <section className="flex-1" aria-labelledby="comparison-heading">
-          <h2 id="comparison-heading" className="text-[11px] font-semibold text-white/35 uppercase tracking-widest mb-4">
-            Before vs After — Traffic
-          </h2>
-          <Comparison result={result} />
-        </section>
-
-        <aside className="w-full lg:w-1/3">
-          <h2 className="text-[11px] font-semibold text-white/35 uppercase tracking-widest mb-4">
-            SDG 9 Sustainability KPIs
-          </h2>
-          <SdgKpiPanel kpis={result?.sdg_kpis} />
-        </aside>
+      {/* Workspace system — fills remaining height */}
+      <div className="flex-1 min-h-0">
+        <WorkspaceShell result={result} onPrint={handlePrint}>
+          {(activeTab) => React.cloneElement(resolveWorkspace(activeTab, result), { onPrint: handlePrint })}
+        </WorkspaceShell>
       </div>
 
-      {/* NEW: Environmental Intelligence Panel */}
-      {env && (
-        <section aria-labelledby="env-heading" className="mb-8">
-          <h2 id="env-heading" className="text-[11px] font-semibold text-white/35 uppercase tracking-widest mb-4">
-            Environmental Intelligence — KML Geospatial Analysis
-          </h2>
-          <EnvironmentalPanel environmental={env} />
-        </section>
-      )}
-
-      {/* Explainability Section */}
-      <section aria-labelledby="explain-heading" className="mb-8">
-        <h2 id="explain-heading" className="text-[11px] font-semibold text-white/35 uppercase tracking-widest mb-4">
-          Simulation Logic &amp; Real-World Impact
-        </h2>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <ScenarioExplanation result={result} />
-          <SustainabilityImpact impact={result?.impact} />
-          <FeatureImportance />
-        </div>
-      </section>
-
-      {/* Charts */}
-      <section aria-labelledby="charts-heading">
-        <h2 id="charts-heading" className="text-[11px] font-semibold text-white/35 uppercase tracking-widest mb-4">
-          Simulation Impact Visualization
-        </h2>
-        <Visualization result={result} />
-      </section>
+      {/* Hidden Printable Report injected at document body for clean printing */}
+      {createPortal(<PrintableReport result={result} />, document.body)}
 
     </div>
   );

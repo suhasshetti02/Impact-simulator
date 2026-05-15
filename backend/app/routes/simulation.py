@@ -1,11 +1,15 @@
 """
-POST /api/simulate — Run a single policy simulation (XGBoost + Environmental Engine).
+POST /api/simulate — Run a single policy simulation (XGBoost + Environmental Engine
+                     + Socio-Economic Engine + Evidence Engine + Planner Summary).
 """
 from flask import Blueprint, request, jsonify
 import pandas as pd
 from datetime import datetime, timezone
 from app.simulation.scenario_engine import run_simulation
 from app.simulation.env_engine import compute_environmental_delta
+from app.simulation.socio_economic import compute_socioeconomic_impact
+from app.evidence import get_evidence_for_simulation
+from app.simulation.planner_engine import generate_planner_summary
 from app.utils.db import get_db
 from app.utils.baselines import build_ml_input_vector, get_location_baseline
 
@@ -156,6 +160,47 @@ def simulate():
     except Exception:
         env_impact = None  # Non-blocking: env engine failure must not crash the API
 
+    # ── 6b. Socio-Economic Impact Engine (rule-based, non-blocking) ──────────
+    socio_impact = compute_socioeconomic_impact(
+        policy_type     = policy,
+        location        = location,
+        deltas          = deltas,
+        timeline_months = timeline,
+        budget_crore    = budget,
+    )
+
+    # ── 6c. Evidence Engine (hybrid live/cached lookup, non-blocking) ─────────────
+    try:
+        force_refresh = request.args.get("refresh_evidence", "false").lower() == "true"
+        evidence_sources = get_evidence_for_simulation(
+            location    = location,
+            policy_type = policy,
+            force_refresh=force_refresh
+        )
+        evidence = {
+            "query_key": f"{policy}_{location.replace(' ', '_').lower()}",
+            "cached": all(s.get('cached', True) for s in evidence_sources) if evidence_sources else True,
+            "sources": evidence_sources,
+            "total_sources": len(evidence_sources) if evidence_sources else 0
+        }
+    except Exception as e:
+        print(f"[Simulation] Evidence layer exception: {e}")
+        evidence = None
+
+    # ── 6d. Planner Summary (deterministic templates, non-blocking) ──────────
+    planner_summary = generate_planner_summary(
+        policy_type          = policy,
+        location             = location,
+        deltas               = deltas,
+        env_impact           = env_impact,
+        socio_economic       = socio_impact,
+        evidence             = evidence,
+        roi_score            = roi_score,
+        sustainability_score = sus_score,
+        budget_crore         = budget,
+        timeline_months      = timeline,
+    )
+
     # ── 7. Assemble result payload ───────────────────────────────────────────
     result = {
         "policy_type":      policy,
@@ -185,7 +230,10 @@ def simulate():
             "economic_value_inr_day":    round(economic_impact_inr_per_day),
             "sustainability_score":      round(sus_score, 1),
         },
-        "environmental":       env_impact,   # NEW: full env intelligence block
+        "environmental":       env_impact,
+        "socio_economic":      socio_impact,
+        "evidence":            evidence,
+        "planner_summary":     planner_summary,
         "traffic_improvement": raw["traffic_improvement"],
         "simulated_at":        datetime.now(timezone.utc).isoformat(),
     }

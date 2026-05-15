@@ -18,7 +18,7 @@ def get_traffic():
         db = get_db()
     except RuntimeError:
         # MongoDB not available — return sample static data
-        return jsonify({"source": "sample", "records": _sample_traffic()}), 200
+        return jsonify({"success": True, "source": "sample", "data": _sample_traffic()}), 200
 
     limit = min(int(request.args.get("limit", 100)), 1000)
     location = request.args.get("location")
@@ -30,9 +30,9 @@ def get_traffic():
     records = list(cursor)
 
     if not records:
-        return jsonify({"source": "sample", "records": _sample_traffic()}), 200
+        return jsonify({"success": True, "source": "sample", "data": _sample_traffic()}), 200
 
-    return jsonify({"source": "mongodb", "records": records}), 200
+    return jsonify({"success": True, "source": "mongodb", "data": records}), 200
 
 
 # ────────────────────────────────────────────────────────────────────────────

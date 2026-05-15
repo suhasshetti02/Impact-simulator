@@ -1,0 +1,180 @@
+/* 
+  Print-specific styles for the dedicated Printable Report.
+  This is isolated from the main dashboard UI.
+*/
+
+.printable-report-container {
+  display: none; /* Hidden on screen by default */
+}
+
+@media print {
+  /* Hide the entire React root app when printing to prevent Chrome buffering/crashing */
+  #root,
+  .bg-noise {
+    display: none !important;
+  }
+
+  /* Show the printable report wrapper */
+  .printable-report-container {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: white;
+    color: black;
+  }
+
+  @page {
+    size: A4;
+    margin: 20mm;
+  }
+
+  .report-page {
+    page-break-after: always;
+    break-after: page;
+    position: relative;
+    min-height: 250mm; /* approximate A4 height minus margins */
+    background: white !important;
+    padding-bottom: 20mm; /* Space for footers if needed */
+  }
+
+  .report-page:last-child {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  /* Typography overrides for print */
+  .printable-report-container * {
+    font-family: "Inter", "IBM Plex Sans", "Source Sans Pro", sans-serif !important;
+    color: #111827 !important; /* Tailwind gray-900 */
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  .printable-report-container h1, 
+  .printable-report-container h2, 
+  .printable-report-container h3, 
+  .printable-report-container .font-bold {
+    color: #000000 !important;
+  }
+
+  .printable-report-container .text-gray-500 {
+    color: #6b7280 !important;
+  }
+
+  .printable-report-container .text-gray-400 {
+    color: #9ca3af !important;
+  }
+
+  .printable-report-container .text-emerald-600 {
+    color: #059669 !important;
+  }
+
+  .printable-report-container .text-emerald-500 {
+    color: #10b981 !important;
+  }
+
+  .printable-report-container .text-red-600 {
+    color: #dc2626 !important;
+  }
+  
+  .printable-report-container .text-red-500 {
+    color: #ef4444 !important;
+  }
+
+  .printable-report-container .bg-emerald-500 {
+    background-color: #10b981 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .printable-report-container .bg-red-500 {
+    background-color: #ef4444 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .printable-report-container .bg-gray-400 {
+    background-color: #9ca3af !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .printable-report-container .bg-gray-100 {
+    background-color: #f3f4f6 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .printable-report-container .bg-gray-50 {
+    background-color: #f9fafb !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Structure */
+  .report-header {
+    margin-bottom: 2rem;
+  }
+
+  .report-header h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .report-line {
+    height: 2px;
+    background-color: #000 !important;
+    width: 100%;
+    margin-bottom: 2rem;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .report-card {
+    border: 1px solid #e5e7eb !important;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .report-card-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb !important;
+    padding-bottom: 0.5rem;
+  }
+
+  .report-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+
+  .report-table th {
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 2px solid #000 !important;
+    font-weight: 700;
+  }
+
+  .report-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb !important;
+  }
+
+  .evidence-item {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

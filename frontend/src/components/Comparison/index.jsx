@@ -29,7 +29,7 @@ export default function Comparison({ result }) {
   if (!result) {
     return (
       <div className="glass-panel border-t-2 border-t-emerald/50 rounded-2xl flex items-center justify-center min-h-44 text-sm text-white/35">
-        Run a simulation to see the before / after comparison.
+        Run a simulation to see the before / after policy implementation comparison.
       </div>
     );
   }
@@ -37,7 +37,7 @@ export default function Comparison({ result }) {
   const { before, after, deltas, policy_type, location, budget_crore, timeline_months } = result;
 
   return (
-    <section className="glass-panel border-t-2 border-t-emerald/50 rounded-2xl p-6 relative group" aria-label="Before vs After Comparison">
+    <section className="glass-panel border-t-2 border-t-emerald/50 rounded-2xl p-6 relative group" aria-label="Before Policy vs After Policy Implementation Comparison">
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-emerald/5 blur-2xl pointer-events-none" />
       
       {/* Meta badges */}
@@ -62,7 +62,7 @@ export default function Comparison({ result }) {
         <table className="w-full text-sm" aria-label="Metric comparison table">
           <thead>
             <tr className="border-b border-white/8">
-              {['Metric', 'Before', 'After', 'Change'].map(h => (
+              {['Metric', 'Before Policy', 'After Policy Implementation', 'Change'].map(h => (
                 <th
                   key={h}
                   scope="col"
