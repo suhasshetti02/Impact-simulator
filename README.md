@@ -51,72 +51,6 @@ User -> [React Dashboard] -> (POST /api/simulate) -> [Flask API]
 - Node.js 18+
 - MongoDB (running locally on port 27017 or via Atlas)
 
-<<<<<<< HEAD
----
-
-### 1. Backend Setup
-1.  Navigate to the backend directory:
-    ```bash
-    cd backend
-    ```
-2.  Create and activate a virtual environment:
-    ```bash
-    python -m venv venv
-    # Windows:
-    .\venv\Scripts\activate
-    # Linux/Mac:
-    source venv/bin/activate
-    ```
-3.  Install dependencies:
-    ```bash
-    pip install -r requirements.txt
-    ```
-4.  Configure Environment Variables:
-    - Copy `.env.example` to `.env` and update your `MONGO_URI`.
-5.  Run the server:
-    ```bash
-    python run.py
-    ```
-    *Backend will be live at `http://localhost:5001`*
-
----
-
-### 2. Frontend Setup
-1.  Navigate to the frontend directory:
-    ```bash
-    cd frontend
-    ```
-2.  Install dependencies:
-    ```bash
-    npm install
-    ```
-3.  Run the development server:
-    ```bash
-    npm start
-    ```
-    *Frontend will be live at `http://localhost:3000`*
-
----
-
-
-
-## 📂 Project Structure
-
-```text
-├── backend/                # Flask API & ML Logic
-│   ├── app/
-│   │   ├── ml/             # Training & Model Architectures
-│   │   ├── routes/         # Simulation & Visualization Endpoints
-│   │   └── simulation/     # Physics-based Policy Engines
-│   └── data/               # Datasets & Serialized Models (.joblib)
-├── frontend/               # React Application
-│   ├── src/
-│   │   ├── components/     # UI: Simulator, Charts, Comparison
-│   │   └── pages/          # Home, Simulator, Results
-├── notebooks/              # EDA & Model Training Experiments
-├── scripts/                # Database setup & Sample data generation
-└── docker-compose.yml      # Container orchestration
-=======
 ### Docker (Quickest Setup)
 ```bash
 docker-compose up --build
@@ -127,7 +61,6 @@ This spins up the Backend (port 5001), Frontend (port 3000), and MongoDB instanc
 Copy the `.env.example` file to `.env` in the `backend/` directory:
 ```bash
 MONGO_URI=mongodb://localhost:27017/policy_simulator
->>>>>>> 4655e81 (final doccumentation)
 ```
 
 ## 10. Running Locally
@@ -140,8 +73,6 @@ pip install -r requirements.txt
 python run.py
 ```
 
-<<<<<<< HEAD
-=======
 **Frontend**:
 ```bash
 cd frontend
@@ -183,4 +114,3 @@ MongoDB uses two main collections:
 - Implement pagination in `train.py` to prevent memory overload when querying MongoDB.
 - Integrate real-world traffic data via APIs (e.g., TomTom, Google Maps) to replace synthetic generation.
 - Add comprehensive unit testing for the deterministic `env_engine.py` and `planner_engine.py`.
->>>>>>> 4655e81 (final doccumentation)
