@@ -1,49 +1,57 @@
-# 🚦 AI-Based Policy Impact Simulator
+# 🚦 Policy Impact Simulator
 
-
-
----
-
-## 🌟 Vision
-The **Policy Impact Simulator** is a state-of-the-art decision-support tool designed for urban planners. It leverages Machine Learning to predict how infrastructure policies—such as tunnel construction, flyovers, and signal optimization—affect real-world traffic patterns, pollution levels, and travel efficiency in Bengaluru.
+An AI-driven, full-stack decision-support tool designed for urban planners. It leverages Machine Learning and physics-based models to predict how infrastructure policies (e.g., tunnels, flyovers, signal optimization) affect real-world traffic patterns and pollution levels.
 
 ---
 
-## 🚀 Key Features
+## 1. Problem
+Urban planners and city authorities often lack data-driven methods to foresee how new policies will impact traffic congestion and environmental metrics before committing to massive budgets. Traditional planning relies heavily on static models that fail to capture dynamic urban interactions.
 
-- **🤖 AI-Driven Predictions**: Utilizes Random Forest and Gradient Boosting models trained on real Bengaluru traffic datasets.
-- **🛣️ Policy Modeling**: Simulate complex scenarios like underground tunnels (+capacity) or elevated flyovers (traffic redistribution).
-- **📊 Comparative Analytics**: Instant "Before vs After" visualization of metrics:
-    - **Vehicle Count**
-    - **Average Speed**
-    - **Travel Time Index**
-    - **Pollution Index**
-- **🌿 Sustainability Insights**: Integrated impact scoring aligned with UN SDG 9 KPIs.
-- **📈 Live Visualization**: Real-time chart rendering using Recharts for trend analysis.
+## 2. Solution
+The Policy Impact Simulator provides an interactive "Before vs. After" simulation dashboard. Planners can input policy parameters (budget, type of infrastructure) and receive immediate predictions on travel time, pollution index (PM2.5), and a deterministic planning summary to guide decision-making.
 
----
+## 3. Features
+- **AI-Driven Traffic Predictions**: Utilizes a Scikit-Learn Random Forest model trained on synthetic historical traffic data to predict changes in travel times.
+- **Environmental Physics Engine**: Estimates PM2.5 and Noise (dB) changes based on road capacity and average speed using formulas adapted from CALINE4 and Nordic Noise models.
+- **Rule-Based Planner Summary**: A custom, deterministic Natural Language Generation (NLG) engine that writes human-readable policy recommendations without the risk of LLM hallucinations.
+- **Interactive Map Dashboard**: Built with React, TailwindCSS, and Leaflet for intuitive spatial policy planning.
 
-## 🛠️ Tech Stack
+## 4. Tech Stack
 
 | Layer | Technologies |
 | :--- | :--- |
-| **Backend** | ![Python](https://img.shields.io/badge/Python-3776AB?style=flat&logo=python&logoColor=white) ![Flask](https://img.shields.io/badge/Flask-000000?style=flat&logo=flask&logoColor=white) |
-| **Frontend** | ![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB) ![Tailwind](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white) ![Recharts](https://img.shields.io/badge/Recharts-222222?style=flat) |
-| **ML/Data** | ![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-F7931E?style=flat&logo=scikit-learn&logoColor=white) ![Pandas](https://img.shields.io/badge/Pandas-150458?style=flat&logo=pandas&logoColor=white) ![NumPy](https://img.shields.io/badge/NumPy-013243?style=flat&logo=numpy&logoColor=white) |
-| **Database** | ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=flat&logo=mongodb&logoColor=white) |
-| **DevOps** | ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white) |
+| **Frontend** | React (19.0), Tailwind CSS, Framer Motion, Recharts, Leaflet |
+| **Backend** | Python 3.9+, Flask, Scikit-Learn, Pandas, NumPy |
+| **Database** | MongoDB (pymongo) |
+| **DevOps** | Docker, Docker Compose |
 
----
+## 5. Architecture
 
-## 💻 Getting Started (Installation)
+```text
+User -> [React Dashboard] -> (POST /api/simulate) -> [Flask API]
+                                                         |
+                                                         +--> [Random Forest ML Model]
+                                                         +--> [Environmental Engine]
+                                                         +--> [Socio-Economic Engine]
+                                                         +--> [Planner Summary Engine]
+                                                         |
+                                                     [MongoDB] -> (Stores History)
+```
 
-Follow these instructions to get the project running on your local machine.
+## 6. Screenshots
+*(Add screenshots of the React Dashboard here)*
+
+## 7. Demo
+**NOT CURRENTLY DEPLOYED** - The application is designed to be run locally or via Docker.
+
+## 8. Installation
 
 ### Prerequisites
-- **Python 3.9+**
-- **Node.js 18+**
-- **MongoDB** (running locally or via Atlas)
+- Python 3.9+
+- Node.js 18+
+- MongoDB (running locally on port 27017 or via Atlas)
 
+<<<<<<< HEAD
 ---
 
 ### 1. Backend Setup
@@ -108,7 +116,71 @@ Follow these instructions to get the project running on your local machine.
 ├── notebooks/              # EDA & Model Training Experiments
 ├── scripts/                # Database setup & Sample data generation
 └── docker-compose.yml      # Container orchestration
+=======
+### Docker (Quickest Setup)
+```bash
+docker-compose up --build
+```
+This spins up the Backend (port 5001), Frontend (port 3000), and MongoDB instances automatically.
+
+## 9. Environment Variables
+Copy the `.env.example` file to `.env` in the `backend/` directory:
+```bash
+MONGO_URI=mongodb://localhost:27017/policy_simulator
+>>>>>>> 4655e81 (final doccumentation)
 ```
 
----
+## 10. Running Locally
+**Backend**:
+```bash
+cd backend
+python -m venv venv
+source venv/bin/activate  # On Windows: .\venv\Scripts\activate
+pip install -r requirements.txt
+python run.py
+```
 
+<<<<<<< HEAD
+=======
+**Frontend**:
+```bash
+cd frontend
+npm install
+npm start
+```
+
+## 11. Testing
+Currently, the repository relies on manual testing. 
+To generate sample synthetic data for the database so the models can train, run:
+```bash
+python scripts/generate_sample_data.py
+python scripts/setup_db.py
+python backend/app/ml/training/train.py rf
+```
+
+## 12. Project Structure
+- `backend/app/routes/`: Flask API controllers (e.g., `simulation.py`).
+- `backend/app/ml/`: Machine Learning models (Random Forest) and training scripts.
+- `backend/app/simulation/`: Physics-based engines and deterministic planner summary logic.
+- `frontend/src/pages/`: React views including the main `SimulatorPage.jsx`.
+- `scripts/`: Data generation and database seeding scripts.
+
+## 13. API Information
+The core endpoint is `POST /api/simulate`. 
+It accepts a JSON payload with `policy_type`, `location`, `budget_crore`, etc., and returns a deeply nested JSON object containing "before" and "after" metrics, environmental impacts, and a "planner_summary".
+
+## 14. Database Information
+MongoDB uses two main collections:
+- `traffic`: Stores raw traffic dataset features.
+- `simulation_history`: Stores the exact JSON outputs of all completed simulations.
+
+## 15. Limitations
+- The current ML models are trained on synthetic data generated by `generate_sample_data.py`, meaning predictions do not reflect true Bengaluru traffic physics accurately.
+- The Environmental Engine is a mathematical proxy (CALINE4 inspired), not a full fluid-dynamics model.
+- The API currently lacks authentication, rate limiting, and CORS restrictions.
+
+## 16. Future Improvements
+- Implement pagination in `train.py` to prevent memory overload when querying MongoDB.
+- Integrate real-world traffic data via APIs (e.g., TomTom, Google Maps) to replace synthetic generation.
+- Add comprehensive unit testing for the deterministic `env_engine.py` and `planner_engine.py`.
+>>>>>>> 4655e81 (final doccumentation)
