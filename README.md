@@ -38,8 +38,24 @@ User -> [React Dashboard] -> (POST /api/simulate) -> [Flask API]
                                                      [MongoDB] -> (Stores History)
 ```
 
-## 6. Screenshots
-*(Add screenshots of the React Dashboard here)*
+<!-- SCREENSHOT-GALLERY:START -->
+## Screenshots
+
+<p align="center">
+  <img src="screenshots/01-screenshot-2026-08-19-221211.png" width="49%" alt="01 screenshot 2026 08 19 221211"/>
+  <img src="screenshots/02-screenshot-2026-08-19-221311.png" width="49%" alt="02 screenshot 2026 08 19 221311"/>
+</p>
+
+<p align="center">
+  <img src="screenshots/03-screenshot-2026-08-19-221405.png" width="49%" alt="03 screenshot 2026 08 19 221405"/>
+  <img src="screenshots/04-screenshot-2026-08-19-221414.png" width="49%" alt="04 screenshot 2026 08 19 221414"/>
+</p>
+
+<p align="center">
+  <img src="screenshots/05-screenshot-2026-08-19-221429.png" width="49%" alt="05 screenshot 2026 08 19 221429"/>
+</p>
+
+<!-- SCREENSHOT-GALLERY:END -->
 
 ## 7. Demo
 **NOT CURRENTLY DEPLOYED** - The application is designed to be run locally or via Docker.
